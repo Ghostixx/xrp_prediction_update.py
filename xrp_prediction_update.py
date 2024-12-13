@@ -88,7 +88,7 @@ except Exception as e:
     st.write(f"Error loading model: {e}")
     model = build_model()
     model = train_model(model, X_train, y_train)
-    model.save(model_path)  # Save model for future use
+    model.save('my_model.keras')  # Save model for future use
 
 # Predict the next day's price
 predicted_price = predict(model, data, scaler)

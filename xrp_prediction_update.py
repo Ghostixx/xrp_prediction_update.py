@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import streamlit as st
 
 # Load XRP data from Yahoo Finance (replace with your preferred API if needed)
-@st.experimental_memo
+@st.experimental_user
 def load_data():
     data = yf.download('XRP-AUD', start='2018-01-01', end='2034-12-31')
     if data.empty:

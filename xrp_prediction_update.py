@@ -70,7 +70,7 @@ data = load_data()
 X_train, y_train, scaler = preprocess_data(data)
 
 # Define model path
-model_path = 'xrp_model.h5'
+model_path = 'my_model.keras'
 
 # Load or train model
 if os.path.exists(model_path):
@@ -78,7 +78,7 @@ if os.path.exists(model_path):
 else:
     model = build_model()
     model = train_model(model, X_train, y_train)
-    model.save('my_model.keras')  # Save model for future use
+    model.save(model_path)  # Save model in the new format
 
 # Predict the next day's price
 predicted_price = predict(model, data, scaler)
@@ -98,14 +98,20 @@ predicted_prices = scaler.inverse_transform(predicted_prices)
 
 # Flatten the arrays to ensure they are 1-dimensional
 predicted_prices = predicted_prices.flatten()
+
+# Ensure that we align predicted and actual prices correctly
 actual_prices = test_data['Close'][60:].values  # Skipping the first 60 days
 
-# Create a DataFrame with the predicted and actual values
-result_df = pd.DataFrame({
-    'Predicted': predicted_prices,
-    'Actual': actual_prices
-})
+# Check that both arrays are 1D and have the same length
+if predicted_prices.shape[0] == actual_prices.shape[0]:
+    # Create a DataFrame with the predicted and actual values
+    result_df = pd.DataFrame({
+        'Predicted': predicted_prices,
+        'Actual': actual_prices
+    })
 
-# Ensure the DataFrame columns are 1-dimensional
-st.subheader("Predicted vs Actual Prices")
-st.line_chart(result_df)
+    # Display results
+    st.subheader("Predicted vs Actual Prices")
+    st.line_chart(result_df)
+else:
+    st.error("The length of predicted prices does not match the length of actual prices.")

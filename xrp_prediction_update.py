@@ -12,7 +12,7 @@ import streamlit as st
 # Load XRP data from Yahoo Finance (replace with your preferred API if needed)
 @st.cache
 def load_data():
-    data = yf.download('XRP-USD', start='2018-01-01', end='2024-12-31')
+    data = yf.download('XRP-AUD', start='2018-01-01', end='2034-12-31')
     return data
 
 # Preprocess data for LSTM model

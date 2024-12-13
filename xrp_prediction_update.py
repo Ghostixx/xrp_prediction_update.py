@@ -82,7 +82,7 @@ else:
 
 # Predict the next day's price
 predicted_price = predict(model, data, scaler)
-st.write(f"Predicted Next Day XRP Price: {predicted_price:.2f} USD")
+st.write(f"Predicted Next Day XRP Price: {predicted_price:.2f} AUD")
 
 # Plot historical data and predictions
 st.subheader("Historical Data")

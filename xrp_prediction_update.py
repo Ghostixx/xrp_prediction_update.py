@@ -70,7 +70,7 @@ data = load_data()
 X_train, y_train, scaler = preprocess_data(data)
 
 # Define model path
-model_path = 'my_model.keras'
+model_path = 'xrp_model.keras'
 
 # Load or train model
 if os.path.exists(model_path):
@@ -78,7 +78,7 @@ if os.path.exists(model_path):
 else:
     model = build_model()
     model = train_model(model, X_train, y_train)
-    model.save(model_path)  # Save model in the new format
+    model.save('my_model.keras')  # Save model for future use
 
 # Predict the next day's price
 predicted_price = predict(model, data, scaler)
@@ -88,29 +88,26 @@ st.write(f"Predicted Next Day XRP Price: {predicted_price:.2f} USD")
 st.subheader("Historical Data")
 st.line_chart(data['Close'])
 
-# Predict for test data (use the last 100 days of the dataset as the test set)
-test_data = data[-100:]  # Taking a small portion for test
-X_test, y_test, _ = preprocess_data(test_data)
-
-# Predict the entire test set
-predicted_prices = model.predict(X_test)
+# Additional: Plot predicted vs actual prices (for evaluation)
+# Ensure predicted_prices and actual_prices are 1D
+predicted_prices = model.predict(X_train)
 predicted_prices = scaler.inverse_transform(predicted_prices)
+predicted_prices = predicted_prices.flatten()  # Flattening to 1D
 
-# Flatten the arrays to ensure they are 1-dimensional
-predicted_prices = predicted_prices.flatten()
+actual_prices = scaler.inverse_transform(y_train.reshape(-1, 1))
+actual_prices = actual_prices.flatten()  # Flattening to 1D
 
-# Ensure that we align predicted and actual prices correctly
-actual_prices = test_data['Close'][60:].values  # Skipping the first 60 days
+# Check the shapes of predicted and actual prices for debugging
+st.write(f"Predicted prices shape: {predicted_prices.shape}")
+st.write(f"Actual prices shape: {actual_prices.shape}")
 
-# Check that both arrays are 1D and have the same length
+# Ensure that both arrays have the same length
 if predicted_prices.shape[0] == actual_prices.shape[0]:
-    # Create a DataFrame with the predicted and actual values
     result_df = pd.DataFrame({
         'Predicted': predicted_prices,
         'Actual': actual_prices
     })
-
-    # Display results
+    # Display predicted vs actual comparison
     st.subheader("Predicted vs Actual Prices")
     st.line_chart(result_df)
 else:

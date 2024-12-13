@@ -88,7 +88,7 @@ st.write(f"Predicted Next Day XRP Price: {predicted_price:.2f} USD")
 st.subheader("Historical Data")
 st.line_chart(data['Close'])
 
-# Predict for test data (use the last 60 days of the dataset as the test set)
+# Predict for test data (use the last 100 days of the dataset as the test set)
 test_data = data[-100:]  # Taking a small portion for test
 X_test, y_test, _ = preprocess_data(test_data)
 
@@ -98,7 +98,7 @@ predicted_prices = scaler.inverse_transform(predicted_prices)
 
 # Flatten the arrays to ensure they are 1-dimensional
 predicted_prices = predicted_prices.flatten()
-actual_prices = test_data['Close'][60:].values
+actual_prices = test_data['Close'][60:].values  # Skipping the first 60 days
 
 # Create a DataFrame with the predicted and actual values
 result_df = pd.DataFrame({
